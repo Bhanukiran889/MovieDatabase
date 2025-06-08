@@ -1,0 +1,58 @@
+/* Root theme variables */
+:root {
+  --bg-light: #ffffff;
+  --text-light: #111111;
+  --bg-dark: #121212;
+  --text-dark: #ffffff;
+  --primary-color: #ff4c29;
+  --card-bg-light: #f9f9f9;
+  --card-bg-dark: #1e1e1e;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.light {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+}
+
+body.dark {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.movie-grid-container {
+  font-family: var(--font-family);
+  padding: 2rem;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.movie-grid-container h2 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  text-align: center;
+  font-size: 2rem;
+}
+
+/* Grid layout */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+  .movie-grid-container {
+    padding: 1rem;
+  }
+
+  .movie-grid-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+}

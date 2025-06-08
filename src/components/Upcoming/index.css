@@ -1,0 +1,48 @@
+:root {
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --bg-light: #ffffff;
+  --bg-dark: #121212;
+  --text-light: #000000;
+  --text-dark: #ffffff;
+  --primary-color: #0077cc;
+  --card-bg-light: #f9f9f9;
+  --card-bg-dark: #1e1e1e;
+}
+
+.movie-grid-container {
+  padding: 1.5rem 2rem;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  font-family: var(--font-family);
+  min-height: 80vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark .movie-grid-container {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.movie-grid-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .movie-grid-container {
+    padding: 1rem 1.2rem;
+  }
+
+  .movie-grid-container h2 {
+    font-size: 1.5rem;
+  }
+}
