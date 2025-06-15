@@ -1,37 +1,69 @@
-// src/components/SearchResults/index.js
-import {useEffect, useState} from 'react'
-import {useLocation} from 'react-router-dom'
+import {Component} from 'react'
+import {withRouter} from 'react-router-dom'
+import Loader from '../Loader'
 import MovieCard from '../MovieCard'
 import Pagination from '../Pagination'
 import {searchMovies} from '../../utils/api'
 import './index.css'
 
-const useQuery = () => new URLSearchParams(useLocation().search)
+class SearchResults extends Component {
+  state = {
+    movies: [],
+    page: 1,
+    query: '',
+    isLoading: true,
+  }
 
-const SearchResults = () => {
-  const query = useQuery().get('query')
-  const [movies, setMovies] = useState([])
-  const [page, setPage] = useState(1)
+  componentDidMount() {
+    const {location} = this.props
+    const queryParam = new URLSearchParams(location.search).get('query')
+    this.setState({query: queryParam}, this.fetchMovies)
+  }
 
-  useEffect(() => {
-    if (query) {
-      fetch(searchMovies(query, page))
-        .then(res => res.json())
-        .then(data => setMovies(data.results))
+  componentDidUpdate(_, prevState) {
+    const {page} = this.state
+    if (prevState.page !== page) {
+      this.fetchMovies()
     }
-  }, [query, page])
+  }
 
-  return (
-    <div className="movie-grid-container">
-      <h2>Search Results for &quot;{query}&quot;</h2>
-      <div className="movie-grid">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+  fetchMovies = async () => {
+    const {query, page} = this.state
+    if (!query) return
+    this.setState({isLoading: true})
+    const response = await fetch(searchMovies(query, page))
+    const data = await response.json()
+    this.setState({movies: data.results, isLoading: false})
+  }
+
+  setPage = newPage => {
+    this.setState({page: newPage})
+  }
+
+  render() {
+    const {movies, page, query, isLoading} = this.state
+    return (
+      <div className="movie-grid-container">
+        <h2>Search Results for "{query}"</h2>
+        {isLoading ? (
+          <div data-testid="loader">
+            <Loader />
+          </div>
+        ) : (
+          <>
+            <div className="movie-grid">
+              {movies.map(movie => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </div>
+            {movies.length > 0 && (
+              <Pagination currentPage={page} setPage={this.setPage} />
+            )}
+          </>
+        )}
       </div>
-      {movies.length > 0 && <Pagination currentPage={page} setPage={setPage} />}
-    </div>
-  )
+    )
+  }
 }
 
-export default SearchResults
+export default withRouter(SearchResults)

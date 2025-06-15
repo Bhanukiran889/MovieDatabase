@@ -1,30 +1,51 @@
-import {useEffect, useState} from 'react'
+import {Component} from 'react'
 import MovieCard from '../MovieCard'
 import Pagination from '../Pagination'
 import {getTopRatedMovies} from '../../utils/api'
 import './index.css'
 
-const TopRated = () => {
-  const [movies, setMovies] = useState([])
-  const [page, setPage] = useState(1)
+class TopRated extends Component {
+  state = {
+    movies: [],
+    page: 1,
+  }
 
-  useEffect(() => {
-    fetch(getTopRatedMovies(page))
-      .then(res => res.json())
-      .then(data => setMovies(data.results))
-  }, [page])
+  componentDidMount() {
+    this.fetchMovies()
+  }
 
-  return (
-    <div className="movie-grid-container">
-      <h2>Top Rated Movies</h2>
-      <div className="movie-grid">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+  componentDidUpdate(_, prevState) {
+    const {page} = this.state
+    if (prevState.page !== page) {
+      this.fetchMovies()
+    }
+  }
+
+  fetchMovies = async () => {
+    const {page} = this.state
+    const response = await fetch(getTopRatedMovies(page))
+    const data = await response.json()
+    this.setState({movies: data.results})
+  }
+
+  setPage = newPage => {
+    this.setState({page: newPage})
+  }
+
+  render() {
+    const {movies, page} = this.state
+    return (
+      <div className="movie-grid-container">
+        <h2>Top Rated Movies</h2>
+        <div className="movie-grid">
+          {movies.map(movie => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))}
+        </div>
+        <Pagination currentPage={page} setPage={this.setPage} />
       </div>
-      <Pagination currentPage={page} setPage={setPage} />
-    </div>
-  )
+    )
+  }
 }
 
 export default TopRated

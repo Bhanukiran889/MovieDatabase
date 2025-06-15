@@ -11,11 +11,16 @@ const Pagination = ({currentPage, setPage}) => {
 
   return (
     <div className="pagination">
-      <button type="button" onClick={handlePrev} disabled={currentPage === 1}>
+      <button
+        type="button"
+        onClick={handlePrev}
+        disabled={currentPage === 1}
+        aria-label="Prev"
+      >
         Prev
       </button>
-      <span>Page {currentPage}</span>
-      <button type="button" onClick={handleNext}>
+      <p>{currentPage}</p>
+      <button type="button" onClick={handleNext} aria-label="Next">
         Next
       </button>
     </div>
